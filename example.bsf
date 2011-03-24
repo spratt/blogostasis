@@ -1,0 +1,30 @@
+example-url
+example tags
+Example Title
+
+Example blurb goes here to provide a preview of the blog post in a few
+words.  <strong>May contain HTML markup!</strong>
+
+<p>The example blog post would be here.</p>
+
+<p>Notice that the first line (everything preceding the first newline
+mark) in this file is the string which will be appended to your blog
+url to retrieve the blog post.  That is, if your blog's url is
+simondavidpratt.com/blog.html, then to access this post the url would
+be simondavidpratt.com/blog.html#example-url </p>
+
+<p>The second line is a space separated list of tags which can be used to
+index your blog posts.</p>
+
+<p>The third part (beginning with the third line) is the title string of
+the blog post.  This may span several lines.  Every line after the
+first will be a subtitle.  The end of the title is marked by two
+newlines.</p>
+
+<p>The fourth part is the blurb, which is a summary of your blog post to
+be used whenever it is useful to give a preview of your post without
+showing the whole post.  This may span several lines, and the end of
+the blurb is marked by two newlines.</p>
+
+<p>The final part is the actual blog post, which also <strong>May contain
+HTML markup!</strong></p>
