@@ -22,53 +22,41 @@
 ###########################################################################
 # imports
 from sys import argv
+from common import read_until_double_newline, read_until_eof
 import json
 
 ###########################################################################
 # check proper usage
 if len(argv) < 2:
-    print 'Usage: bs.py {index_file}'
+    command = argv[0].rsplit('/')[-1]
+    print 'Usage:', command, 'input_file [output_file]'
     exit()
 
 ###########################################################################
-# check file exists
-filename = argv[1]
+# determine i/o files
+in_file = argv[1]
+out_file = in_file + '.json'
+if len(argv) > 2:
+    out_file = argv[2]
+
+###########################################################################
+# check input file exists
 # TODO
-    
-###########################################################################
-# functions
-def read_until_double_newline(file):
-    str = ''
-    line = file.readline()
-    while line != '\n':  # any newline looks like \n
-        str += line.strip()
-        line = file.readline()
-    return str
-
-def read_until_eof(file):
-    str = ''
-    line = file.readline()
-    while line != '':
-        str += line.strip()
-        line = file.readline()
-    return str
 
 ###########################################################################
-# data
+# read in bsf
 post = dict()
 
-###########################################################################
-# main
-
 # note mode 'wU', U allows universal newlines
-with open(filename,'rU') as file:
+with open(in_file,'rU') as file:
     post['url'] = file.readline().strip()
     post['tags'] = file.readline().strip().split(' ')
     post['title'] = read_until_double_newline(file)
     post['blurb'] = read_until_double_newline(file)
     post['post'] = read_until_eof(file)
 
+###########################################################################
 # dump json to a file
-with open(filename+'.json','w') as file:
+with open(out_file,'w') as file:
     file.write(json.dumps(post))
     file.write('\n')

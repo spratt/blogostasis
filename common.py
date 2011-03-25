@@ -1,19 +1,7 @@
-        BBB  L     OOO   GGG   OOO   SSS  TTTTT  AAA   SSS  I  SSS
-        B  B L    O   O G     O   O S       T   A   A S     I S
-        BBB  L    O   O G GG  O   O  SSS    T   AAAAA  SSS  I  SSS
-        B  B L    O   O G   G O   O     S   T   A   A     S I     S
-        BBB  LLLL  OOO   GGG   OOO   SSS    T   A   A  SSS  I  SSS
- 
-    Blogostasis builds an indexed and next/previous linked blog from
-    static files using generated JSON.
-
+#!/usr/bin/python
 ###########################################################################
 #                                                                         #
-# LICENSE                                                                 #
-#                                                                         #
-###########################################################################
-#                                                                         #
-# Copyright (c) 2010, Simon David Pratt <me@simondavidpratt.com>          #
+# Copyright (c) 2011, Simon David Pratt <me@simondavidpratt.com>          #
 #                                                                         #
 # Permission to use, copy, modify, and/or distribute this software        #
 # for any purpose with or without fee is hereby granted, provided         #
@@ -30,3 +18,19 @@
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.                #
 #                                                                         #
 ###########################################################################
+
+def read_until_double_newline(file):
+    str = ''
+    line = file.readline()
+    while line != '\n':  # any newline looks like \n
+        str += line.strip()
+        line = file.readline()
+    return str
+
+def read_until_eof(file):
+    str = ''
+    line = file.readline()
+    while line != '':
+        str += line.strip()
+        line = file.readline()
+    return str
