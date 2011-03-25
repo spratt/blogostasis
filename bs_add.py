@@ -21,43 +21,66 @@
 
 ###########################################################################
 # imports
-import time
 from sys import argv
-from common import read_until_double_newline, read_until_eof
+import os.path
+from common import read_until_eof
 import json
 
 ###########################################################################
 # check proper usage
-if len(argv) < 2:
-    command = argv[0].rsplit('/')[-1]
-    print 'Usage:', command, 'input_file [output_file]'
+if len(argv) < 3:
+    print 'Usage:',argv[0],'{index_file} {post_file}'
     exit()
 
 ###########################################################################
-# determine i/o files
-in_file = argv[1]
-out_file = in_file + '.json'
-if len(argv) > 2:
-    out_file = argv[2]
+# check post file exists
+post_filename = argv[2]
+if not os.path.exists(post_filename):
+    print 'File not found: ',post_filename
+    exit()
 
 ###########################################################################
-# check input file exists
-# TODO
+# read in post
+post = dict()
+with open(post_filename,'rU') as file:
+    post = json.loads(read_until_eof(file))
+
+# remove text section
+post.pop('text')
 
 ###########################################################################
-# read in bsf
-post = dict(date=int(time.time()))
-
-# note mode 'wU', U allows universal newlines
-with open(in_file,'rU') as file:
-    post['url'] = file.readline().strip()
-    post['tags'] = file.readline().strip().split(' ')
-    post['title'] = read_until_double_newline(file)
-    post['blurb'] = read_until_double_newline(file)
-    post['text'] = read_until_eof(file)
+# create or read in the index
+index_filename = argv[1]
+index = dict(posts_by_url={},posts_by_date={},posts_by_tag={})
+if os.path.exists(index_filename):
+    with open(index_filename,'rU') as file:
+        index = json.loads(read_until_eof(file))
 
 ###########################################################################
-# dump json to a file
-with open(out_file,'w') as file:
-    file.write(json.dumps(post))
+# post url already exists
+url = post['url']
+if index['posts_by_url'].has_key(url):
+    print 'url already exists in index: ',url
+    exit()
+        
+###########################################################################
+# add post to index
+# by url
+index['posts_by_url'][url] = post
+
+# by date
+date = post['date']
+index['posts_by_date'][date] = url
+
+# by tags
+for tag in post['tags']:
+    if index['posts_by_tag'].has_key(tag):
+        index['posts_by_tag'][tag].append(url)
+    else:
+        index['posts_by_tag'][tag] = [url] # list = [item1,item2,...]
+
+###########################################################################
+# output index to file
+with open(index_filename,'w') as file:
+    file.write(json.dumps(index))
     file.write('\n')
