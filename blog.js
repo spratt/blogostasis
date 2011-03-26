@@ -67,7 +67,8 @@ var blog = (function() {
 	var post = ex.index.posts_by_filename[filename];
 	document.title = ex.BLOG_TITLE + ' > ' + post.title;
 	$('#title').text(post.title);
-	$('#date').text(post.date);
+	var time = new Date(post.date * 1000); // seconds->milliseconds
+	$('#date').text(time.toString());
 	$('#blurb').html(post.blurb);
 	var tags = $('#tags');
 	tags.empty();
