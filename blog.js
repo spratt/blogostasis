@@ -39,9 +39,39 @@ var blog = (function() {
 	return url.substr(1+url.lastIndexOf('#'),url.length);
     };
 
+    var buildLink = function(text,url) {
+	var link = $('<a>');
+	link.attr('href',url);
+	link.text(text);
+	return link;
+    }
+
     var getPost = function(filename) {
 	if(ex.index == undefined) return null;
-	console.log(filename);
+	//////////////////////////////////////////////////////////////////////
+	// Build next link
+	var next_filename = ex.index.next[filename];
+	var next_div = $('#next_link');
+	next_div.empty();
+	if(next_filename != undefined) {
+	    var next_post = ex.index.posts_by_filename[next_filename];
+	    next_div.text('Next: ');
+	    next_div.append(buildLink(next_post.title,'#' + next_post.url));
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	// Build prev link
+	var prev_filename = ex.index.prev[filename];
+	var prev_div = $('#prev_link');
+	prev_div.empty();
+	if(prev_filename != undefined) {
+	    var prev_post = ex.index.posts_by_filename[prev_filename];
+	    prev_div.text('Previous: ');
+	    prev_div.append(buildLink(prev_post.title,'#' + prev_post.url));
+	}
+
+	//////////////////////////////////////////////////////////////////////
+	// Finally, get the actual post data
 	getJSON(filename,function(data) {
 	    $('#title').text(data.title);
 	    $('#text').html(data.text);
