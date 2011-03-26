@@ -48,6 +48,25 @@ var blog = (function() {
 
     var getPost = function(filename) {
 	if(ex.index == undefined) return null;
+	
+	//////////////////////////////////////////////////////////////////////
+	// Asynchronously get the post text
+	getJSON(filename,function(data) {
+	    $('#text').html(data.text);
+	});
+
+	//////////////////////////////////////////////////////////////////////
+	// Deal with all the attributes
+	var post = ex.index.posts_by_filename[filename];
+	$('#title').text(post.title);
+	$('#date').text(post.date);
+	$('#blurb').html(post.blurb);
+	var tags = $('#tags');
+	tags.empty();
+	for(var tag in post.tags) {
+	    tags.append(post.tags[tag] + ' ');
+	}
+	
 	//////////////////////////////////////////////////////////////////////
 	// Build next link
 	var next_filename = ex.index.next[filename];
@@ -69,20 +88,6 @@ var blog = (function() {
 	    prev_div.text('Previous: ');
 	    prev_div.append(buildLink(prev_post.title,'#' + prev_post.url));
 	}
-
-	//////////////////////////////////////////////////////////////////////
-	// Finally, get the actual post data
-	getJSON(filename,function(data) {
-	    $('#title').text(data.title);
-	    $('#text').html(data.text);
-	    $('#date').text(data.date);
-	    $('#blurb').html(data.blurb);
-	    var tags = $('#tags');
-	    tags.empty();
-	    for(var tag in data.tags) {
-		tags.append(data.tags[tag] + ' ');
-	    }
-	});
     }
 
     var getLatest = function() {
