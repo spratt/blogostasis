@@ -16,7 +16,14 @@
 * PERFORMANCE OF THIS SOFTWARE.                                               *
 ******************************************************************************/
 var blog = (function() {
+    //////////////////////////////////////////////////////////////////////
+    // CONFIGURATION
+    var BLOG_TITLE = 'My Bodacious Blog';
+
+    //////////////////////////////////////////////////////////////////////
+    // Functions
     var ex = {};
+    ex.BLOG_TITLE = BLOG_TITLE;
 
     var getJSON = function(url,success_fn) {
 	$.getJSON(url,{},function(data) {
@@ -58,6 +65,7 @@ var blog = (function() {
 	//////////////////////////////////////////////////////////////////////
 	// Deal with all the attributes
 	var post = ex.index.posts_by_filename[filename];
+	document.title = ex.BLOG_TITLE + ' > ' + post.title;
 	$('#title').text(post.title);
 	$('#date').text(post.date);
 	$('#blurb').html(post.blurb);
