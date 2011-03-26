@@ -24,7 +24,7 @@
 import time
 from sys import argv
 import os.path
-from common import read_until_double_newline, read_until_eof
+from common import remove_newlines, read_until_double_newline, read_until_eof
 import json
 
 ###########################################################################
@@ -53,8 +53,8 @@ post = dict(date=int(time.time()))
 
 # note mode 'wU', U allows universal newlines
 with open(in_file,'rU') as file:
-    post['url'] = file.readline().strip()
-    post['tags'] = file.readline().strip().split(' ')
+    post['url'] = remove_newlines(file.readline())
+    post['tags'] = remove_newlines(file.readline()).split(' ')
     post['title'] = read_until_double_newline(file)
     post['blurb'] = read_until_double_newline(file)
     post['text'] = read_until_eof(file)

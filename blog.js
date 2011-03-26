@@ -19,6 +19,7 @@ var blog = (function() {
     //////////////////////////////////////////////////////////////////////
     // CONFIGURATION
     var BLOG_TITLE = 'My Bodacious Blog';
+    var DELIMITER  = '?';
 
     //////////////////////////////////////////////////////////////////////
     // Functions
@@ -40,10 +41,15 @@ var blog = (function() {
 
     var parseLocation = function() {
 	var url = location.href;
-	if(url.lastIndexOf('#') == -1) {
+	var startPos = 1+url.lastIndexOf(DELIMITER);
+	if(startPos == -1) {
 	    return null;
 	}
-	return url.substr(1+url.lastIndexOf('#'),url.length);
+	var endPos = url.length;
+	// Strip off any hashes
+	if(url.indexOf('#') != -1) endPos = url.lastIndexOf('#');
+	if(startPos >= endPos) return null; // wtf
+	return url.substr(startPos,endPos);
     };
 
     var buildLink = function(text,url) {
@@ -84,7 +90,7 @@ var blog = (function() {
 	if(next_filename != undefined) {
 	    var next_post = ex.index.posts_by_filename[next_filename];
 	    next_div.text('Next: ');
-	    next_div.append(buildLink(next_post.title,'#' + next_post.url));
+	    next_div.append(buildLink(next_post.title,DELIMITER + next_post.url));
 	}
 
 	//////////////////////////////////////////////////////////////////////
@@ -95,33 +101,27 @@ var blog = (function() {
 	if(prev_filename != undefined) {
 	    var prev_post = ex.index.posts_by_filename[prev_filename];
 	    prev_div.text('Previous: ');
-	    prev_div.append(buildLink(prev_post.title,'#' + prev_post.url));
+	    prev_div.append(buildLink(prev_post.title,DELIMITER + prev_post.url));
 	}
     }
 
     var getLatest = function() {
 	var filename = ex.index.posts[0];
 	var href = location.href;
-	if(href.indexOf('#') != -1) {
-	    href = href.substring(0,href.indexOf('#'));
+	if(href.indexOf(DELIMITER) != -1) {
+	    href = href.substring(0,href.indexOf(DELIMITER));
 	}
-	href += '#' + ex.index.posts_by_filename[filename].url;
+	href += DELIMITER + ex.index.posts_by_filename[filename].url;
 	location.href = href;
     }
-
-    $(window).hashchange(function() {
-	var url = parseLocation();
-	if(url in ex.index.posts_by_url)
-	    getPost(ex.index.posts_by_url[parseLocation()]);
-	else
-	    getLatest();
-    });
     
     $(window).load(function() {
 	getIndex(function(){
-	    if(parseLocation() == null) {
+	    var url = parseLocation();
+	    if(url == null || !(url in ex.index.posts_by_url)) {
 		getLatest();
-	    } else $(window).hashchange();
+	    } else
+		getPost(ex.index.posts_by_url[url]);
 	});
     });
     return ex;
