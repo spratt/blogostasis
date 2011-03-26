@@ -23,6 +23,7 @@
 # imports
 import time
 from sys import argv
+import os.path
 from common import read_until_double_newline, read_until_eof
 import json
 
@@ -42,7 +43,9 @@ if len(argv) > 2:
 
 ###########################################################################
 # check input file exists
-# TODO
+if not os.path.exists(in_file):
+    print 'File not found: ',in_file
+    exit()
 
 ###########################################################################
 # read in bsf

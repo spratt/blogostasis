@@ -1,0 +1,57 @@
+<!----------------------------------------------------------------------------\
+| Copyright (c) 2011, Simon David Pratt <me@simondavidpratt.com>              |
+|                                                                             |
+| Permission to use, copy, modify, and/or distribute this software for        |
+| any purpose with or without fee is hereby granted, provided that the        |
+| above copyright notice and this permission notice appear in all             |
+| copies.                                                                     |
+|                                                                             |
+| THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL               |
+| WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED               |
+| WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE            |
+| AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL        |
+| DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA          |
+| OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER           |
+| TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR            |
+| PERFORMANCE OF THIS SOFTWARE.                                               |
+\----------------------------------------------------------------------------->
+<html>
+<head>
+<script src="getJSON.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
+</script>
+<script>
+    $(window).load(function() {
+	// Get the index
+	var index = getJSON('index.json');
+	// Print a list of blog post titles
+	var index_div = $('#index');
+	index_div.empty();
+	for(var i in index.posts) {
+	    var filename = index.posts[i];
+	    var post = index.posts_by_filename[filename];
+	    index_div.append(post.title + '<br>');
+	}
+	// Print a list of tags
+	var tag_div = $('#tags');
+	for(var tag in index.posts_by_tag) {
+	    tag_div.append(tag + '<br>');
+	}
+	// Print the text of the latest blog post
+	var latest_post = getJSON(index.posts[0]);
+	$('#results').html(latest_post.text);
+    });
+</script>
+</head>
+<body>
+<h2>Index of blog post titles in reverse chronological order</h2>
+<div id="index">
+</div>
+<h2>Tags</h2>
+<div id="tags">
+</div>
+<h2>Results</h2>
+<div id="results">
+</div>
+</body>
+</html>

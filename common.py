@@ -23,7 +23,7 @@ def read_until_double_newline(file):
     str = ''
     line = file.readline()
     while line != '\n':  # any newline looks like \n
-        str += line.strip()
+        str += line.strip() + ' '
         line = file.readline()
     return str
 
@@ -31,6 +31,6 @@ def read_until_eof(file):
     str = ''
     line = file.readline()
     while line != '':
-        str += line.strip()
+        str += line.strip() + ' '
         line = file.readline()
     return str
