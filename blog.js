@@ -39,17 +39,20 @@ var blog = (function() {
 	});
     };
 
+    var removeHash = function(str) {
+	var pos = str.indexOf('#');
+	if(pos == -1) return str;
+	return str.substr(0,pos);
+    }
+
     var parseLocation = function() {
-	var url = location.href;
+	var url = removeHash(location.href);
 	var startPos = 1+url.lastIndexOf(DELIMITER);
 	if(startPos == -1) {
 	    return null;
 	}
-	var endPos = url.length;
-	// Strip off any hashes
-	if(url.indexOf('#') != -1) endPos = url.lastIndexOf('#');
-	if(startPos >= endPos) return null; // wtf
-	return url.substr(startPos,endPos);
+	console.log(url.substr(startPos));
+	return url.substr(startPos);
     };
 
     var buildLink = function(text,url) {
