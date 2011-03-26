@@ -17,41 +17,18 @@
 \----------------------------------------------------------------------------->
 <html>
 <head>
-<script src="getJSON.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
 </script>
-<script>
-    $(window).load(function() {
-	// Get the index
-	var index = getJSON('index.json');
-	// Print a list of blog post titles
-	var index_div = $('#index');
-	index_div.empty();
-	for(var i in index.posts) {
-	    var filename = index.posts[i];
-	    var post = index.posts_by_filename[filename];
-	    index_div.append(post.title + '<br>');
-	}
-	// Print a list of tags
-	var tag_div = $('#tags');
-	for(var tag in index.posts_by_tag) {
-	    tag_div.append(tag + '<br>');
-	}
-	// Print the text of the latest blog post
-	var latest_post = getJSON(index.posts[0]);
-	$('#results').html(latest_post.text);
-    });
-</script>
+<script src="https://github.com/cowboy/jquery-hashchange/raw/v1.3/jquery.ba-hashchange.min.js"></script>
+<script src="blog.js"></script>
 </head>
 <body>
-<h2>Index of blog post titles in reverse chronological order</h2>
-<div id="index">
-</div>
-<h2>Tags</h2>
-<div id="tags">
-</div>
-<h2>Results</h2>
-<div id="results">
-</div>
+<h2 id="title"></h2>
+<h3 id="blurb"></h3>
+<div id="tags"></div>
+<div id="date"></div>
+<div id="next_link"></div>
+<div id="prev_link"></div>
+<div id="text"></div>
 </body>
 </html>
