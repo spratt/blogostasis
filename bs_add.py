@@ -51,7 +51,7 @@ post.pop('text')
 ###########################################################################
 # create or read in the index
 index_filename = argv[1]
-index = dict(posts=[],posts_by_url={},posts_by_date={},posts_by_tag={},posts_by_filename={},prev={},next={})
+index = dict(posts=[],posts_by_url={},posts_by_date={},posts_by_tag={},posts_by_filename={},posts_by_author={},prev={},next={})
 if os.path.exists(index_filename):
     with open(index_filename,'rU') as file:
         index = json.loads(read_until_eof(file))
@@ -87,6 +87,13 @@ for tag in post['tags']:
         index['posts_by_tag'][tag].append(post_filename)
     else:
         index['posts_by_tag'][tag] = [post_filename]
+
+# by author
+author = post['author']
+if index['posts_by_author'].has_key(author):
+    index['posts_by_author'][author].append(post_filename)
+else:
+    index['posts_by_author'][author] = [post_filename]
 
 # by next
 if len(index['posts']) > 1:

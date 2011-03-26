@@ -1,4 +1,5 @@
 example-url
+Author Name
 example tags
 First Example Title
 
@@ -13,5 +14,7 @@ url to retrieve the blog post.  That is, if your blog's url is
 simondavidpratt.com/blog.html, then to access this post the url would
 be simondavidpratt.com/blog.html#example-url </p>
 
-<p>The second line is a space separated list of tags which can be used to
+<p>The second line is the author's name.</p>
+
+<p>The third line is a space separated list of tags which can be used to
 index your blog posts.</p>

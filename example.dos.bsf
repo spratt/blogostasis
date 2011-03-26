@@ -1,16 +1,17 @@
 example-url2
+Author Name
 example tags
 Second Example Title
 
 Example blurb goes here to provide a preview of the blog post in a few
 words.  <strong>May contain HTML markup!</strong>
 
-<p>The third part (beginning with the third line) is the title string of
+<p>The fourth part (beginning with the third line) is the title string of
 the blog post.  This may span several lines.  Every line after the
 first will be a subtitle.  The end of the title is marked by two
 newlines.</p>
 
-<p>The fourth part is the blurb, which is a summary of your blog post to
+<p>The fifth part is the blurb, which is a summary of your blog post to
 be used whenever it is useful to give a preview of your post without
 showing the whole post.  This may span several lines, and the end of
 the blurb is marked by two newlines.</p>
