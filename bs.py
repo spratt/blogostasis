@@ -49,11 +49,12 @@ if not os.path.exists(in_file):
 
 ###########################################################################
 # read in bsf
-post = dict(date=int(time.time()))
+post = dict()
 
 # note mode 'wU', U allows universal newlines
 with open(in_file,'rU') as file:
     post['url'] = remove_newlines(file.readline())
+    post['date'] = remove_newlines(file.readline())
     post['author'] = remove_newlines(file.readline())
     post['tags'] = remove_newlines(file.readline()).split(' ')
     post['title'] = read_until_double_newline(file)
