@@ -15,117 +15,64 @@
 * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR            *
 * PERFORMANCE OF THIS SOFTWARE.                                               *
 ******************************************************************************/
-var blog = (function() {
+blog.getPost = function(filename,index) {
     //////////////////////////////////////////////////////////////////////
-    // CONFIGURATION
-    var BLOG_TITLE = 'My Bodacious Blog';
-    var DELIMITER  = '?';
+    // Asynchronously get the post text
+    blog.getJSON(filename,function(data) {
+	$('#text').html(data.text);
+    });
 
     //////////////////////////////////////////////////////////////////////
-    // Functions
-    var ex = {};
-    ex.BLOG_TITLE = BLOG_TITLE;
-
-    var getJSON = function(url,success_fn) {
-	$.getJSON(url,{},function(data) {
-	    success_fn(data);
-	});
-    };
-
-    var getIndex = function(success_fn) {
-	getJSON('index.json',function(data) {
-	    ex.index = data;
-	    success_fn();
-	});
-    };
-
-    var removeHash = function(str) {
-	var pos = str.indexOf('#');
-	if(pos == -1) return str;
-	return str.substr(0,pos);
-    }
-
-    var parseLocation = function() {
-	var url = removeHash(location.href);
-	var startPos = 1+url.lastIndexOf(DELIMITER);
-	if(startPos == -1) {
-	    return null;
-	}
-	console.log(url.substr(startPos));
-	return url.substr(startPos);
-    };
-
-    var buildLink = function(text,url) {
-	var link = $('<a>');
-	link.attr('href',url);
-	link.text(text);
-	return link;
-    }
-
-    var getPost = function(filename) {
-	if(ex.index == undefined) return null;
-	
-	//////////////////////////////////////////////////////////////////////
-	// Asynchronously get the post text
-	getJSON(filename,function(data) {
-	    $('#text').html(data.text);
-	});
-
-	//////////////////////////////////////////////////////////////////////
-	// Deal with all the attributes
-	var post = ex.index.posts_by_filename[filename];
-	document.title = ex.BLOG_TITLE + ' > ' + post.title;
-	$('#title').text(post.title);
-	$('#date').text(post.date);
-	$('#author').text(post.author);
-	$('#blurb').html(post.blurb);
-	var tags = $('#tags');
-	tags.empty();
-	for(var tag in post.tags) {
-	    tags.append(post.tags[tag] + ' ');
-	}
-	
-	//////////////////////////////////////////////////////////////////////
-	// Build next link
-	var next_filename = ex.index.next[filename];
-	var next_div = $('#next_link');
-	next_div.empty();
-	if(next_filename != undefined) {
-	    var next_post = ex.index.posts_by_filename[next_filename];
-	    next_div.text('Next: ');
-	    next_div.append(buildLink(next_post.title,DELIMITER + next_post.url));
-	}
-
-	//////////////////////////////////////////////////////////////////////
-	// Build prev link
-	var prev_filename = ex.index.prev[filename];
-	var prev_div = $('#prev_link');
-	prev_div.empty();
-	if(prev_filename != undefined) {
-	    var prev_post = ex.index.posts_by_filename[prev_filename];
-	    prev_div.text('Previous: ');
-	    prev_div.append(buildLink(prev_post.title,DELIMITER + prev_post.url));
-	}
-    }
-
-    var getLatest = function() {
-	var filename = ex.index.posts[0];
-	var href = location.href;
-	if(href.indexOf(DELIMITER) != -1) {
-	    href = href.substring(0,href.indexOf(DELIMITER));
-	}
-	href += DELIMITER + ex.index.posts_by_filename[filename].url;
-	location.href = href;
+    // Deal with all the attributes
+    var post = index.posts_by_filename[filename];
+    blog.setTitle(post.title);
+    $('#title').text(post.title);
+    $('#date').text(post.date);
+    $('#author').text(post.author);
+    $('#blurb').html(post.blurb);
+    var tags = $('#tags');
+    tags.empty();
+    for(var tag in post.tags) {
+	tags.append(post.tags[tag] + ' ');
     }
     
-    $(window).load(function() {
-	getIndex(function(){
-	    var url = parseLocation();
-	    if(url == null || !(url in ex.index.posts_by_url)) {
-		getLatest();
-	    } else
-		getPost(ex.index.posts_by_url[url]);
-	});
+    //////////////////////////////////////////////////////////////////////
+    // Build next link
+    var next_filename = index.next[filename];
+    var next_div = $('#next_link');
+    next_div.empty();
+    if(next_filename != undefined) {
+	var next_post = index.posts_by_filename[next_filename];
+	next_div.text('Next: ');
+	next_div
+	    .append(blog.buildLink(next_post.title,blog.DELIMITER + next_post.url));
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    // Build prev link
+    var prev_filename = index.prev[filename];
+    var prev_div = $('#prev_link');
+    prev_div.empty();
+    if(prev_filename != undefined) {
+	var prev_post = index.posts_by_filename[prev_filename];
+	prev_div.text('Previous: ');
+	prev_div
+	    .append(blog.buildLink(prev_post.title,blog.DELIMITER + prev_post.url));
+    }
+}
+
+blog.getLatest = function(index) {
+    var filename = index.posts[0];
+    blog.getPost(filename,index);
+}
+blog.onload(function() {
+    blog.getJSON('index.json',function(data){
+	var url = blog.parseLocation();
+	if(url == null || !(url in data.posts_by_url)) {
+	    blog.getLatest(data);
+	} else {
+	    var filename = data.posts_by_url[url];
+	    blog.getPost(filename,data);
+	}
     });
-    return ex;
-})();
+});

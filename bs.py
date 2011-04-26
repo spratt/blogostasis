@@ -51,7 +51,7 @@ if not os.path.exists(in_file):
 # read in bsf
 post = dict()
 
-# note mode 'wU', U allows universal newlines
+# note mode 'rU', U allows universal newlines
 with open(in_file,'rU') as file:
     post['url'] = remove_newlines(file.readline())
     post['date'] = remove_newlines(file.readline())
